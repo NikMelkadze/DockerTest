@@ -2,11 +2,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DockerTest.Controller;
 
-public class AnswerController : Controller
+public class AnswerController : ControllerBase
 {
-    // GET
-    public IActionResult Index()
+    private readonly ApplicationDbContext _applicationDbContext;
+
+    public AnswerController(ApplicationDbContext applicationDbContext)
     {
-        return View();
+        _applicationDbContext = applicationDbContext;
+    }
+
+    [HttpPost("submit-answer")]
+    public async Task Register([FromBody] string answer)
+    {
+         _applicationDbContext.Answers.Add(new Answer { UserAnswer = answer });
+        await _applicationDbContext.SaveChangesAsync();
     }
 }
