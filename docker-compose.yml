@@ -1,0 +1,27 @@
+﻿version: '3.7'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sql_server
+    environment:
+      SA_PASSWORD: "Admin123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - db-data:/var/opt/mssql
+
+  app:
+    image: ghcr.io/nikmelkadze/docker:latest
+    container_name: dotnet_app
+    ports:
+      - "8001:80"
+      - "8081:8081"
+    depends_on:
+      - db
+networks:
+  app-network:
+
+volumes:
+  db-data:
